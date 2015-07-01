@@ -159,6 +159,32 @@ module Rubill
 
           expect(described_class._post(url, body)).to eq({name: "abc"})
         end
+
+        context "with debug option" do
+          subject { described_class.clone.instance }
+          let(:response_json) do
+            {
+              response_status: 0,
+              response_data: { name: "abc", debug_output: '' },
+            }.to_json
+          end
+
+          before do
+            Rubill.configure do |c|
+              c.user_name = "test"
+              c.password  = "pass"
+              c.dev_key   = "dev_key"
+              c.org_id    = "org_id"
+              c.debug     = true
+            end
+          end
+
+          it "response with debug output" do
+            expect(described_class).to receive(:post) { double(body: response_json) }
+
+            expect(described_class._post(url, body)).to include(:debug_output)
+          end
+        end
       end
 
       context "when the API returns a nonzero status" do
