@@ -20,11 +20,33 @@ module Rubill
             c.org_id    = "org_id"
           end
 
+          expect(described_class.base_uri).to eq("https://api.bill.com/api/v2")
           expect(described_class).to receive(:login) { "abc123" }
         end
 
         it "logs in" do
           expect(subject.id).to eq("abc123")
+        end
+      end
+
+      context "with a sandbox configuration" do
+        subject { described_class.clone.instance }
+
+        before do
+          Rubill.configure do |c|
+            c.user_name = "test"
+            c.password  = "pass"
+            c.dev_key   = "dev_key"
+            c.org_id    = "org_id"
+            c.sandbox   = true
+          end
+
+          expect(described_class).to receive(:login) { "abc123" }
+        end
+
+        it "logs in" do
+          expect(subject.id).to eq("abc123")
+          expect(subject.class.base_uri).to eq("https://api-stage.bill.com/api/v2")
         end
       end
     end
