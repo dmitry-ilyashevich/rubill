@@ -33,12 +33,20 @@ module Rubill
       execute("/Crud/Delete/#{entity}.json", id: id)
     end
 
+    def self.pay_bills(opts={})
+      execute("/PayBills.json", opts)
+    end
+
     def self.receive_payment(opts={})
       execute("/RecordARPayment.json", opts)
     end
 
     def self.send_payment(opts={})
       execute("/RecordAPPayment.json", opts)
+    end
+
+    def self.upload_attachment(opts={})
+      execute("/UploadAttachment.json", opts)
     end
 
     def self.void_sent_payment(id)
